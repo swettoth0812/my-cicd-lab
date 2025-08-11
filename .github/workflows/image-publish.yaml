@@ -50,6 +50,10 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Get Short SHA
+        id: get_short_sha
+        run: echo "SHORT_SHA=$(echo ${{ inputs.tags }} | cut -c1-7)" >> $GITHUB_ENV
+
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
         with:
@@ -57,4 +61,4 @@ jobs:
           file: ${{ inputs.dockerfile }}
           push: true
           tags: |
-            ${{ inputs.registry }}/${{ github.repository_owner }}/${{ inputs.image-name }}:${{ inputs.tags }}
+            ${{ inputs.registry }}/${{ github.repository_owner }}/${{ inputs.image-name }}:${{ env.SHORT_SHA }}
